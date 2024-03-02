@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+    {% block 'style' %}
+    <style>
+
+        *{
+            margin: 0;
+        }
+
+        .body{
+            padding: 2vmin;
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            grid-gap: 4vmin;
+            background:  linear-gradient(90deg, rgb(44, 121, 145), rgb(48, 134, 55));
+        }
+
+        #post{
+            margin: auto;
+            display:flex;
+            flex-direction: column;
+            align-self: center;
+            width: 40vmin;
+            min-width: 40vmin;
+            height: fit-content;
+            min-width: 40vmin;
+        }
+
+
+        #header{
+            padding: 1vmin 0 1vmin 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .user_pic{
+            width: fit-content;
+            height: 4vmin;
+            margin-right: 1vmin;
+        }
+
+        .actions{
+            width: fit-content;
+            height: 3vmin;
+            margin-right: 1vmin;
+
+        }
+
+        #user_pic_1{
+            border-radius: 50%;
+        }
+
+        #header_content{
+            list-style: none;
+            display: flex;
+        }
+
+        #post_pic{
+            width: 40vmin;
+            min-width: 40vmin;
+            height: fit-content;
+            object-fit: cover;
+        }
+
+        h5{
+            display: flex;
+            text-align: center;
+            align-items: center;
+        }
+
+        .footer_content{
+            justify-content: space-between;
+            display: flex;
+
+        }
+
+        #footer_content{
+            display: inline-flex;
+        }
+
+        .footer1{
+            padding: 1vmin 0 0 0 ;
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+        @media (max-width:900px){
+            #post{
+                width: 40vmin;
+            }
+
+            #post_pic{
+                width: 40vmin;
+            }
+        }
+        .like-button {
+    /* background-color: rgb(16, 231, 242); */
+    /* color: rgb(23, 22, 22); */
+    background: transparent;
+    border: 0px;
+}
+.like-button.liked {
+    background: transparent;
+    border: 0px;
+}
+
+    </style>
+    {% endblock 'style' %}
+{% block 'main' %}
+   {% for post in posts reversed %}
+    <div id="post">
+        <div id="header">
+            <li id="header_content">
+                {% if post.post_user.profile_pic %}
+                <img id="user_pic_1" class="user_pic" src="{{post.post_user.profile_pic.url}}" alt="">
+                {% else %}
+               <img id="profile_pic" src="../static/images/profile_pic.jpg" alt="User profile picture">
+               {% endif %}
+                <h5>{{ post.post_user.username }}</h5>
+            </li>
+        </div>
+
+        <div>
+            <img id="post_pic" src="{{post.image.url}}" alt="">
+        </div>
+        <p>{{ post.description }}</p>
+  {% if user.is_authenticated %}
+        <div class="footer1">
+            <li class="footer_content" id="footer_content">
+                {% if request.user.is_authenticated %}
+                <form method="post" action="{% url 'like-post' post.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="like-button {% if request.user in post.likes.all %}liked{% endif %}">
+                      {% if request.user in post.likes.all %}<img id="user_pic_2" class=actions src="../static/images/liked.png" alt="">{% else %}<img id="user_pic_2" class=actions src="../static/images/like.png" alt="">{% endif %}
+                    <p>{{ post.likes.count }}</p>
+                  </button>
+              </form>
+             {% endif %}
+                <img id="commenticon" onclick="const a = (()=>{
+                if (document.querySelector('#commentingform{{post.id}}').style.display == 'none'){
+                 document.querySelector('#commentingform{{post.id}}').style.display='Block'
+                }
+                else{
+                 document.querySelector('#commentingform{{post.id}}').style.display='none'
+                }
+                }); a()" class="actions" src="../static/images/comment.png" alt="">
+            </li>
+            <li class="footer_content">    
+                <img class="actions"  src="../static/images/send.png" alt="">
+            </li>
+        </div>
+        {% if request.user.is_authenticated%}
+    <form id="commentingform{{post.id}}" style="display: none;" method="post" action="{% url 'add-comment' post.id %}">
+    {% csrf_token %}
+    <label for="comment">Add a Comment:</label>
+    <textarea name="comment" id="comment" rows="3"></textarea>
+    <button type="submit">Comment</button>
+</form>
+ {% endif %}
+        <ul style="max-height: 100px; overflow-y: scroll; -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none; ">
+            <ul>
+                {% for comment in comments %}
+                    {% if comment.post == post %}
+                        <li>{%if request.user == comment.Commenting_user %} YOU{%else%}{{ comment.Commenting_user }}{%endif%} said: {{ comment.description }}</li>
+                    {% endif %}
+                    <br>
+                {% endfor %}
+            </ul>
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+{% endblock 'main' %}

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block 'style' %}
+<style>
+    body {
+
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: 'Poppins', sans-serif;
+        background-image: url(../media/instabg.jpg);
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+    }
+
+    button {
+        background-color: #405DE6;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        margin-left: 30%;
+
+
+    }
+
+    button:hover {
+        background-color: #C13584;
+    }
+    .profile-avatar-input {
+        width: 100%;
+        padding: 0.5vw 1vw;
+        font-size: 1.2rem;
+        color: #331971;
+        border-radius: 5px;
+        border: 1px solid #7D4EF5;
+    }
+    .profile-avatar {
+        width: 90px;
+        height:90px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 1vw;
+        
+    }
+
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+
+</style>
+{% endblock 'style' %}
+
+{% block 'main' %}
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>Edit Profile.</h2>
+       
+        {% if messages %}
+        <div class="messages">
+          {% for message in messages %}
+          <div class="alert {% if message.tags %}alert-{{ message.tags }}"
+               {% endif %}>
+            {{ message }}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+   
+
+
+    
+
+    <div class="profile-form-holder">
+        <input type="text" value="{{user.first_name}}" id="model_fname" hidden>
+            <input type="text" value="{{user.last_name}}" id="model_lname" hidden>
+            <input type="text" value="{{user.username}}" id="model_uname" hidden>
+            <input type="text" value="/media/{{user.profile_pic}}" id="model_profile_pic" hidden>
+            <div class="profile-form">
+                <div class="profile-input-container profile-avatar-container">
+                    <label for="profile-avatar" style="cursor:pointer;">Select Display Pic :
+                        <div class="profile-avatar">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 24 24">
+                                <path fill="#888888"
+                                    d="M12 18q2.075 0 3.538-1.462Q17 15.075 17 13q0-2.075-1.462-3.538Q14.075 8 12 8Q9.925 8 8.463 9.462Q7 10.925 7 13q0 2.075 1.463 3.538Q9.925 18 12 18Zm0-2q-1.25 0-2.125-.875T9 13q0-1.25.875-2.125T12 10q1.25 0 2.125.875T15 13q0 1.25-.875 2.125T12 16Zm6-6q.425 0 .712-.288Q19 9.425 19 9t-.288-.713Q18.425 8 18 8t-.712.287Q17 8.575 17 9t.288.712Q17.575 10 18 10ZM4 21q-.825 0-1.412-.587Q2 19.825 2 19V7q0-.825.588-1.412Q3.175 5 4 5h3.15L8.7 3.325q.15-.15.337-.238Q9.225 3 9.425 3h5.15q.2 0 .388.087q.187.088.337.238L16.85 5H20q.825 0 1.413.588Q22 6.175 22 7v12q0 .825-.587 1.413Q20.825 21 20 21Z" />
+                            </svg>
+                        </div>
+                    </label>
+                    
+                       <div hidden id="parentelement"> {{ form.profile_pic }}</div>
+                    <script>
+                        let profileAvatar = document.querySelector('.profile-avatar');
+                        let avatarInput = document.querySelector('.profile-avatar-input');
+                        avatarInput.addEventListener('change', () => {
+                            let fileSource = URL.createObjectURL(avatarInput.files[0]);
+                            profileAvatar.innerHTML = `<img src='${fileSource}' alt='user avatar'>;`
+                            
+                        });
+                        document.addEventListener('DOMContentLoaded',()=>{
+                            link = document.querySelector('#model_profile_pic').value
+                            if (link != ''){
+                                profileAvatar.innerHTML =`<img src='${link}' alt='user avatar'>;`
+                            }
+                        })
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        
+    <label for="f_name">First Name :</label>
+    {{ form.first_name }}
+
+    <label for="l_name">Last Name :</label>
+    {{ form.last_name }}
+
+    <label for="username">Username :</label>
+    {{ form.username }}
+    
+    
+
+    <button type="submit">Confirm Changes</button>
+    </form>
+{% endblock 'main' %}

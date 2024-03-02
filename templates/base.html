@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base</title>
+    <style>
+        *{
+            margin: 0;
+        }
+
+
+        .body {
+            background: linear-gradient(90deg, rgb(44, 121, 145), rgb(48, 134, 55));
+            flex-direction: column;
+        }
+
+
+
+        #logo{
+            border: nn;
+            width: fit-content;
+            height: 5vmin;
+            margin: 0.6vmin;
+            
+        }
+
+        .header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            
+        }
+
+        #header{
+            border-bottom: 1px solid rgb(59, 58, 58);
+        }
+
+        #profile_pic{
+            border-radius: 50%;
+            width: fit-content;
+            height: 4vmin;
+            margin: 0.6vmin;
+        }
+
+        #search{
+            color: black;
+            width: 35vmin;
+            height: 3vmin;
+            margin: 0.6vmin;
+            border: none;
+            outline: none;
+            border-radius: 0.5vmin;
+            text-indent: 0.5vmin;
+            font-size: medium;
+            font-weight: 150;
+        }
+
+        li img{
+            width: fit-content;
+            height: 2.8vmin;
+            margin-right: 1vmin;
+        }
+
+        li {
+            display: inline-flex;
+            justify-content: space-between;
+            margin: 0.6vmin;
+        }
+
+        .footer5{
+            border-top: 1px solid rgb(59, 58, 58);
+            display: flex;
+            position: fixed;
+            bottom:0;
+            width: 100%;
+            justify-content: center;
+            justify-content: space-around;
+        }
+    </style>
+    {% block 'style' %}
+    {% endblock 'style' %}
+</head>
+<body class="body">
+    <header class="header" id="header">
+        <img id="logo" src="../static/images/logor.png" alt="Wesite_logo">
+        <div class="header">
+            <a style="font-size: 30px;" href="{%url 'addpost' %}">Add post</a>
+            &nbsp
+            &nbsp
+            &nbsp
+            <a style="font-size: 30px;" href="{%url 'aboutus' %}">About us</a>
+            &nbsp
+            &nbsp
+            &nbsp
+            <a style="font-size: 30px;" href="{%url 'contactus' %}">Support</a>
+            &nbsp
+            &nbsp
+            &nbsp
+
+            {% if user.is_authenticated %}
+            <a style="font-size: 30px;" style="text-decoration: none;color:black;" href="{% url 'logout' %}">Logout<a>
+
+                {% if user.profile_pic %}
+               <a style="font-size: 30px;" href="{%url 'editprofile' %}"> <img id="profile_pic" src="{{user.profile_pic.url}}" alt="User profile picture"></a>
+               {% else %}
+               <a style="font-size: 30px;" href="{%url 'editprofile' %}"> <img id="profile_pic" src="../static/images/profile_pic.jpg" alt="User profile picture"></a>
+               {% endif %}
+
+                {% else %}
+                <a style="font-size: 30px;" href="{% url 'login' %}"><img id="profile_pic" src="../static/images/profile_pic.jpg" alt="User profile picture"></a> 
+                {% endif %}
+        </div>
+    </header>
+
+  
+    {% block 'main' %}
+    {% endblock 'main' %}
+    <footer class="footer5">
+        <li>
+            <img src="../static/images/info.png" alt="">
+            <img src="../static/images/help.png" alt="">
+        </li>
+    </footer>
+    
+</body> 
+</html>

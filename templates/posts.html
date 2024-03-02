@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+    <style>
+        * {
+            margin: 0;
+        }
+
+        .body {
+            background: linear-gradient(90deg, rgb(44, 121, 145), rgb(48, 134, 55));
+
+        }
+
+        #posts_container {
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 3fr);
+            max-width: fit-content;
+            max-height: fit-content;
+            row-gap: 0.3vmin;
+            column-gap: 0.3vmin;
+            justify-content: stretch;
+            align-items: stretch;
+        }
+
+        #posts_container img {
+            width: 32vmin;
+            height: 32vmin;
+        }
+
+
+        #sub_heading {
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="body">
+    <h2 id="sub_heading">Posts</h2>
+    <div id="posts_container">
+        {% for post in posts %}
+        <img src="{{ post.image.url }}" alt="">
+        {% endfor %}
+        </div>
+</body>
+
+</html>
